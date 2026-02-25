@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, staging, dev ]
   pull_request:
-    branches: [ main, staging,  dev ]
+    branches: [ main, staging, dev ]
 
 jobs:
   build:
@@ -19,6 +19,8 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
+          cache-dependency-path: glowcommerce-backend/pom.xml
 
       - name: Build with Maven
         run: mvn clean verify
+        working-directory: glowcommerce-backend
