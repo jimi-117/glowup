@@ -71,7 +71,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: './myapp-frontend/package-lock.json'
+          cache-dependency-path: './glowcommerce-frontend/package-lock.json'
 
       - name: Install and Test
         run: |
@@ -82,7 +82,7 @@ jobs:
   container-build:
     needs: [
       backend-ci, 
-      #frontend-ci #TODO: set Exec only after both backend and frontend CI jobs pass
+      #frontend-ci #TODO: (have to be enabled) Exec only after both backend and frontend CI jobs pass
       ] 
     runs-on: ubuntu-latest
     steps:
