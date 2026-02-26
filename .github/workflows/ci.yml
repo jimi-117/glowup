@@ -23,9 +23,9 @@ jobs:
         with:
           fetch-depth: 0 # GitGuardian's scan history
       - name: GitGuardian scan
-        uses: GitGuardian/ggshield-action@master
+        uses: GitGuardian/ggshield-action@v1
         env:
-          GG_API_KEY: ${{ secrets.GG_API_KEY }}
+          GITGUARDIAN_API_KEY: ${{ secrets.GG_API_KEY }}
 
   # ------------------------- Backend build, test, and SonarCloud scan ------------------------------
   backend-ci:
