@@ -3,25 +3,17 @@ name: GlowCommerce CI
 on:
   push:
     branches: [ "main" , "staging", "dev"]
-    paths:
-      - 'glowcommerce-backend/**'
-      - 'glowcommerce-frontend/**'
-      - '.github/workflows/ci.yml'
   pull_request:
     branches: [ "main" , "staging", "dev"]
-    paths:
-      - 'glowcommerce-backend/**'
-      - 'glowcommerce-frontend/**'
-      - '.github/workflows/ci.yml'
 
 jobs:
-  # Global security scan with GitGuardian
+  # 1. Global security scan with GitGuardian
   security-scan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # GitGuardian's scan history
+          fetch-depth: 0 
       - name: GitGuardian scan
         uses: GitGuardian/ggshield-action@v1
         env:
@@ -47,7 +39,7 @@ jobs:
           cache: 'maven'
 
       - name: Build and Test with Maven
-        run: mvn -B package # Generates target/classes
+        run: mvn -B package
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
@@ -68,6 +60,8 @@ jobs:
         working-directory: ./glowcommerce-frontend
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -89,21 +83,22 @@ jobs:
 
   # ------------------------- Build Docker images and scan with Trivy ------------------------------
   container-build:
-    needs: [
-      backend-ci, 
-      frontend-ci
-      ] 
+    needs: [backend-ci, frontend-ci] 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Build Backend Image
-        run: make backend-build
+        run: |
+          make backend-build
+          echo "Built images list:"
+          docker images
 
       - name: Scan Backend Image with Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'glowcommerce-backend:latest'
+          # image name reffered in docker-compose.yml
+          image-ref: 'glowcommerce-backend:latest' 
           format: 'table'
           exit-code: '1'
           severity: 'CRITICAL,HIGH'
