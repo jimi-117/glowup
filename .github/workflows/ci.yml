@@ -74,15 +74,22 @@ jobs:
           cache-dependency-path: './glowcommerce-frontend/package-lock.json'
 
       - name: Install and Test
-        run: |
-          npm ci
-          npm test -- --watchAll=false # Unabale in CI environment
+        run: npm ci
+        # TODO: Add test command when tests are implemented, e.g., npm test
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: glowcommerce-frontend
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # ------------------------- Build Docker images and scan with Trivy ------------------------------
   container-build:
     needs: [
       backend-ci, 
-      #frontend-ci #TODO: (have to be enabled) Exec only after both backend and frontend CI jobs pass
+      frontend-ci
       ] 
     runs-on: ubuntu-latest
     steps:
