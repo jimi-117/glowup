@@ -25,6 +25,7 @@ services:
   # Backend Spring Boot
   backend:
     build: ./glowcommerce-backend
+    image: glowcommerce-backend:latest
     container_name: glowcommerce-backend
     restart: unless-stopped
     depends_on:
@@ -50,6 +51,7 @@ services:
   # Frontend React
   frontend:
     build: ./glowcommerce-frontend
+    image: glowcommerce-frontend:latest
     container_name: glowcommerce-frontend
     restart: unless-stopped
     depends_on:
